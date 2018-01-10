@@ -1,21 +1,27 @@
 <template>
   <div id="app">
-    Token: 
-    <input type="text" v-model="token">
-    Server: 
-    <input type="text" v-model="server">
-    Endpoint: 
-    <input type="text" v-model="endpoint">
+    <div class="input-group">
+      <label>Token:</label> 
+      <input type="text" v-model="token">
+    </div>
+    <div class="input-group">
+      Endpoint: 
+      <input type="text" v-model="endpoint">
+    </div>
     <br/>
-    Body: 
-    <textarea type="text" v-model="requestBody" rows="10"/>
-    <br/>
-    <button type="button" @click="clean">Clean</button>
-    <button type="button" @click="doPost">POST</button>
-    <button type="button" @click="cancel">Cancel</button>
-    <br/>
-    Response:
-    {{ response }}
+    <div class="input-group">
+      <label>Body:</label> 
+      <textarea type="text" v-model="requestBody" rows="10"/>
+    </div>
+    <div class="input-group">
+      <label>Response:</label>
+      <textarea type="text" v-model="response" rows="10"/>
+    </div>
+    <div class="btn-holder">
+      <button class="clean" type="button" @click="clean">Clean</button>
+      <button class="post" type="button" @click="doPost">POST</button>
+      <button class="cancel" type="button" @click="cancel">Cancel</button>
+    </div>
   </div>
 </template>
 
@@ -27,8 +33,7 @@ export default {
   data () {
     return {
       token: '',
-      server: 'http://localhost:8000/',
-      endpoint: '',
+      endpoint: 'http://localhost:8000/',
       requestBody: '',
       response: '',
       source: axios.CancelToken.source(),
@@ -38,7 +43,7 @@ export default {
     doPost() {
       console.log('here');
       localStorage.setItem('Token', this.token);
-      this.$api.post(`${this.server}${this.endpoint}`, JSON.parse(this.requestBody),
+      this.$api.post(`${this.endpoint}`, JSON.parse(this.requestBody),
       {
         cancelToken: this.source.token,
       }).then((response) => {
@@ -52,7 +57,6 @@ export default {
       });
     },
     cancel() {
-      console.log('clicked');
       this.source.cancel('canceled');
     },
     clean() {
@@ -62,31 +66,45 @@ export default {
 }
 </script>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="sass">
+#app 
+  font-family: 'Avenir', Helvetica, Arial, sans-serif
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  color: #2c3e50
+  margin-top: 60px
 
-h1, h2 {
-  font-weight: normal;
-}
+  .input-group
+    display: flex
+    flex-direction: column
+  .btn-holder
+    width: 100%
+    text-align: right
+    margin-top: 30px
+    button
+      text-transform: uppercase
+      font-size: 1rem
+      font-weight: 300
+      padding: 3px 15px
+      border-radius: 0
+      background-color: transparent
+    .clean
+      border: 1px solid #5bc0de
+      color: #5bc0de
+      &:hover
+        color: white
+        background-color: #5bc0de
+    .post
+      border: 1px solid #0275d8
+      color: #0275d8
+      &:hover
+        color: white
+        background-color: #0275d8
+    .cancel
+      border: 1px solid #d9534f
+      color: #d9534f
+      &:hover
+        color: white
+        background-color: #d9534f
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
 </style>
